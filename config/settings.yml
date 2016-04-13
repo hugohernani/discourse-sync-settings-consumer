@@ -1,0 +1,4 @@
+plugins:
+  sync_settings_consumer_enabled:
+    default: true
+    client: true
