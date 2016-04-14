@@ -4,9 +4,15 @@ module DiscourseSyncSettingsConsumer
     def retrieveSettings
       shareable_settings = params["shareable_settings"]
 
+      consumer_settings = SiteSetting.current.keys;
+
       site_settings(shareable_settings).each do |key, value|
-        if SiteSetting.respond_to?(key.to_sym)
-          SiteSetting.set(key.to_sym, value)
+        if consumer_settings.include?(key.to_sym)
+          begin
+            SiteSetting.set(key.to_sym, value)
+          rescue => e
+            Rails.logger.error("Error From SyncSettings pluging when Changing the Setting: #{key}. Message: #{e.message}")
+          end
         end
       end
 
